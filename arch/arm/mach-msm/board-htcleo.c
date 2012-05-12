@@ -769,7 +769,8 @@ static struct android_pmem_platform_data mdp_pmem_pdata = {
 	.name		= "pmem",
 	.start		= MSM_PMEM_MDP_BASE,
 	.size		= MSM_PMEM_MDP_SIZE,
-	.no_allocator	= 0,
+	/* .no_allocator	= 0, */
+	.allocator_type = PMEM_ALLOCATORTYPE_BITMAP,
 	.cached		= 1,
 };
 
@@ -777,7 +778,8 @@ static struct android_pmem_platform_data android_pmem_adsp_pdata = {
 	.name		= "pmem_adsp",
 	.start		= MSM_PMEM_ADSP_BASE,
 	.size		= MSM_PMEM_ADSP_SIZE,
-	.no_allocator	= 0,
+	/* .no_allocator	= 0, */
+	.allocator_type = PMEM_ALLOCATORTYPE_BITMAP,
 	.cached		= 1,
 };
 
@@ -786,7 +788,8 @@ static struct android_pmem_platform_data android_pmem_venc_pdata = {
 	.name		= "pmem_venc",
 	.start		= MSM_PMEM_VENC_BASE,
 	.size		= MSM_PMEM_VENC_SIZE,
-	.no_allocator	= 0,
+	/* .no_allocator	= 0, */
+	.allocator_type = PMEM_ALLOCATORTYPE_BITMAP,
 	.cached		= 1,
 };
 
