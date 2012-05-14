@@ -29,6 +29,8 @@
 #include "clock.h"
 #include "proc_comm.h"
 
+//#define ENABLE_CLOCK_INFO   1
+
 extern struct clk msm_clocks[];
 
 static DEFINE_MUTEX(clocks_mutex);
@@ -44,7 +46,11 @@ enum {
 static int debug_mask=DEBUG_MDNS;
 module_param_named(debug_mask, debug_mask, int, S_IRUGO | S_IWUSR | S_IWGRP);
 
+#if 1
 #define D(x...) printk(KERN_DEBUG "clock-wince: " x)
+#else
+#define D(x...) do {} while (0)
+#endif
 
 struct mdns_clock_params
 {
@@ -207,7 +213,12 @@ struct mdns_clock_params msm_clock_freq_parameters[] = {
 
 	MSM_CLOCK_REG(  144000,   3, 0x64, 0x32, 3, 3, 0, 1, 19200000), /* SD, 144kHz */
 	MSM_CLOCK_REG(  400000,   1, 0x30, 0x15, 0, 3, 0, 1, 19200000), /* SD, 400kHz */
+#if 0 /* wince uses this clock setting for UART2DM */
+	MSM_CLOCK_REG( 1843200,     3, 0x64, 0x32, 3, 2, 4, 1, 245760000), /*  115200*16=1843200 */
+//	MSM_CLOCK_REG(            , 2, 0xc8, 0x64, 3, 2, 1, 1, 768888888), /* 1.92MHz for 120000 bps */
+#else
 	MSM_CLOCK_REG( 7372800,   3, 0x64, 0x32, 0, 2, 4, 1, 245760000), /*  460800*16, will be divided by 4 for 115200 */
+#endif
 	MSM_CLOCK_REG(12000000,   1, 0x20, 0x10, 1, 3, 1, 1, 768000000), /* SD, 12MHz */
 	MSM_CLOCK_REG(14745600,   3, 0x32, 0x19, 0, 2, 4, 1, 245760000), /* BT, 921600 (*16)*/
 	MSM_CLOCK_REG(19200000,   1, 0x0a, 0x05, 3, 3, 1, 1, 768000000), /* SD, 19.2MHz */
@@ -371,6 +382,7 @@ static int set_mdns_host_clock(uint32_t id, unsigned long freq)
 				// This clock requires MD and NS regs to set frequency:
 				writel(msm_clock_freq_parameters[n].md, MSM_CLK_CTL_BASE + offset - 4);
 				writel(msm_clock_freq_parameters[n].ns, MSM_CLK_CTL_BASE + offset);
+//				msleep(5);
 				if(debug_mask&DEBUG_MDNS)
 					D("%s: %u, freq=%lu calc_freq=%u pll%d=%u expected pll =%u\n", __func__, id, 
 				  msm_clock_freq_parameters[n].freq,
@@ -394,6 +406,7 @@ static int set_mdns_host_clock(uint32_t id, unsigned long freq)
 		       "find suitable parameter for freq %lu\n", freq);
 	}
 
+//     return retval;
        return 0;
 }
 
@@ -520,7 +533,7 @@ static int new_clk_set_rate(uint32_t id, unsigned long rate)
         else if (rate ==  3000000) speed = 1;
         else 
         {
-            printk("wrong MDC clock %lu\n", rate);
+            printk("wrong MDC clock %d\n", rate);
             return 0;
         }
         clk = 40;
@@ -534,7 +547,7 @@ static int new_clk_set_rate(uint32_t id, unsigned long rate)
         else if (rate == 96000000) speed = 5;
         else 
         {
-            printk("wrong clock %lu\n", rate);
+            printk("wrong clock %d\n", rate);
             return 0;
         }
         clk = 41;
@@ -1047,6 +1060,21 @@ static int pc_clk_is_enabled(uint32_t id)
 	return is_enabled;
 }
 
+long pc_clk_round_rate(unsigned id, unsigned rate)
+{
+
+	/* Not really supported; pc_clk_set_rate() does rounding on it's own. */
+	return rate;
+}
+
+static int pc_pll_request(unsigned id, unsigned on)
+{
+	if(debug_mask&DEBUG_UNKNOWN_CMD)
+		printk(KERN_WARNING "%s not implemented for PLL=%u\n", __func__, id);
+
+	return 0;
+}
+
 /*
  * Standard clock functions defined in include/linux/clk.h
  */
@@ -1155,6 +1183,12 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 }
 EXPORT_SYMBOL(clk_set_rate);
 
+long clk_round_rate(struct clk *clk, unsigned long rate)
+{
+	return clk->ops->round_rate(clk->id, rate);
+}
+EXPORT_SYMBOL(clk_round_rate);
+
 int clk_set_parent(struct clk *clk, struct clk *parent)
 {
 	return -ENOSYS;
@@ -1229,6 +1263,7 @@ EXPORT_SYMBOL(clks_print_running);
 int clks_allow_tcxo_locked(void)
 {
 	struct clk *clk;
+	struct hlist_node *pos;
 	unsigned long flags;
 
 	spin_lock_irqsave(&clocks_lock, flags);
@@ -1300,10 +1335,12 @@ struct clk_ops clk_ops_pcom = {
 	.enable = pc_clk_enable,
 	.disable = pc_clk_disable,
 	.auto_off = pc_clk_disable,
+//	.reset = pc_clk_reset,
 	.set_rate = pc_clk_set_rate,
 	.set_min_rate = pc_clk_set_min_rate,
 	.set_max_rate = pc_clk_set_max_rate,
 	.set_flags = pc_clk_set_flags,
 	.get_rate = pc_clk_get_rate,
 	.is_enabled = pc_clk_is_enabled,
+//	.round_rate = pc_clk_round_rate,
 };
