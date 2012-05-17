@@ -175,4 +175,10 @@ static inline int cpu_is_msm8960(void)
 	return 0;
 #endif
 }
+
+static inline int cpu_is_msm8930(void)
+{
+	/* not implemented */
+	return 0;
+}
 #endif
