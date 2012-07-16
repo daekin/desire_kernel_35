@@ -546,6 +546,11 @@ arch_initcall(socinfo_init_sysdev);
 
 void *setup_dummy_socinfo(void)
 {
+#ifdef CONFIG_MACH_HTCLEO
+	/* makes sure we don't reach BUG_ON */
+	dummy_socinfo.id = 30;
+	pr_info("%s: Setting ID 30 for htcleo's MSM_CPU_8X50\n", __func__);
+#endif
 	if (machine_is_msm8960_rumi3() || machine_is_msm8960_sim())/* ||
 	    machine_is_msm8960_cdp())*/
 		dummy_socinfo.id = 87;
