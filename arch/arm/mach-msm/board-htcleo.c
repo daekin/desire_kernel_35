@@ -66,7 +66,7 @@
 #include "proc_comm.h"
 #include "dex_comm.h"
 
-#define ATAG_MAGLDR_BOOT    0x4C47414D 
+#define ATAG_MAGLDR_BOOT    0x4C47414D
 struct tag_magldr_entry
 {
      _Bool fNoNandBoot;
@@ -223,7 +223,6 @@ static struct bma150_platform_data htcleo_g_sensor_pdata = {
 	.chip_layout = 1,
 };
 
-
 static struct platform_device microp_devices[] = {
 	{
 		.name = BMA150_G_SENSOR_NAME,
@@ -285,7 +284,7 @@ static struct i2c_board_info base_i2c_devices[] =
 };
 
 ///////////////////////////////////////////////////////////////////////
-// USB 
+// USB
 ///////////////////////////////////////////////////////////////////////
 
 static uint32_t usb_phy_3v3_table[] =
@@ -763,7 +762,7 @@ static struct platform_device msm_kgsl_device =
 };
 
 ///////////////////////////////////////////////////////////////////////
-// Memory 
+// Memory
 ///////////////////////////////////////////////////////////////////////
 
 static struct android_pmem_platform_data mdp_pmem_pdata = {
@@ -930,7 +929,6 @@ static struct platform_device *devices[] __initdata =
 #ifdef CONFIG_HTCLEO_BTN_BACKLIGHT_MANAGER
 	&btn_backlight_manager,
 #endif
-
 };
 ///////////////////////////////////////////////////////////////////////
 // Vibrator
@@ -971,7 +969,6 @@ static void __init msm_device_i2c_init(void)
 	msm_i2c_gpio_init();
 	msm_device_i2c.dev.platform_data = &msm_i2c_pdata;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 // Clocks
@@ -1049,13 +1046,13 @@ static void __init htcleo_init(void)
 	do_sdc1_reset();
 
 	msm_acpu_clock_init(&htcleo_clock_data);
-	
+
 	perflock_init(&htcleo_perflock_data);
 
 	init_dex_comm();
 
 	htcleo_audio_init();
-	
+
 	msm_device_i2c_init();
 
 	/* set the gpu power rail to manual mode so clk en/dis will not
