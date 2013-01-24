@@ -95,8 +95,6 @@ static unsigned wifi_get_nvs_size( void )
 	return len;
 }
 
-int wifi_calibration_size_set(void);
-
 int wifi_calibration_size_set(void)
 {
 	if (wifi_calibration != NULL)
