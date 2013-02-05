@@ -205,7 +205,7 @@ static int smd_tty_write(struct tty_struct *tty,
 					const unsigned char *buf, int len)
 {
 	struct smd_tty_info *info = tty->driver_data;
-	int avail, ret, runfix=0;
+	int avail, ret;
 #ifdef CONFIG_MACH_HTCLEO
 	static int init=0;
 	const unsigned char* firstcall ="AT@BRIC=0\r";

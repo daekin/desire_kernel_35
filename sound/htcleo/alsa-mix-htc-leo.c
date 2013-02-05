@@ -54,14 +54,6 @@ int q6audio_set_tx_volume(int level);
 
 #endif
 
-
-/*
-#define CHRC(exp, ret)   \
-    rc = (exp); if (rc < 0) { DBG(#exp " = %d", rc); goto fail; }
-*/
-
-
-
 static struct snd_card *g_card;
 
 //-----------------------------------------------------------------------------------------
@@ -277,7 +269,7 @@ static int snd_rx_vol_put(struct snd_kcontrol *kcontrol, struct snd_ctl_elem_val
     int rc = 0;
     int val;
 
-    DBG("%d", ucontrol->value.integer.value[0]);
+    DBG("%ld", ucontrol->value.integer.value[0]);
 
     val = ucontrol->value.integer.value[0];
     if (val < 0 || val > 100)
@@ -300,7 +292,7 @@ static int snd_tx_vol_put(struct snd_kcontrol *kcontrol, struct snd_ctl_elem_val
     int rc = 0;
     int val;
 
-    DBG("%d", ucontrol->value.integer.value[0]);    
+    DBG("%ld", ucontrol->value.integer.value[0]);    
 
     val = ucontrol->value.integer.value[0];
     if (val < 0 || val > 100)
@@ -323,7 +315,7 @@ static int snd_tx_mute_put(struct snd_kcontrol *kcontrol, struct snd_ctl_elem_va
     int rc = 0;
     int mute;
 
-    DBG("%d", ucontrol->value.integer.value[0]);
+    DBG("%ld", ucontrol->value.integer.value[0]);
 
     mute = ucontrol->value.integer.value[0] ? 1 : 0;
     rc = q6audio_set_tx_mute(mute);   
@@ -341,7 +333,7 @@ static int snd_rx_mute_put(struct snd_kcontrol *kcontrol, struct snd_ctl_elem_va
     int rc = 0;
     int mute;
 
-    DBG("%d", ucontrol->value.integer.value[0]);
+    DBG("%ld", ucontrol->value.integer.value[0]);
 
     mute = ucontrol->value.integer.value[0] ? 1 : 0;
     rc = q6audio_set_rx_mute(mute);

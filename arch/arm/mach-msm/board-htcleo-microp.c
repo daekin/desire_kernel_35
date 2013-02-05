@@ -45,6 +45,11 @@
 
 #include "board-htcleo.h"
 
+static struct wake_lock microp_i2c_wakelock;
+
+static struct i2c_client *private_microp_client;
+
+
 static uint32_t microp_als_kadc;
 static int als_power_control=0;
 static DEFINE_MUTEX(capella_cm3602_lock);
@@ -220,31 +225,6 @@ int microp_spi_vote_enable(int spi_device, uint8_t enable)
 	ret = microp_spi_enable(enable);
 	return ret;
 
-}
-
-static int microp_read_adc(uint8_t channel, uint16_t *value)
-{
-	struct i2c_client *client;
-	int ret;
-	uint8_t cmd[2], data[2];
-
-	client = private_microp_client;
-	cmd[0] = 0;
-	cmd[1] = 1; //channel;
-//	ret = i2c_write_block(client, MICROP_I2C_WCMD_READ_ADC_REQ, cmd, 2);
-	ret = i2c_write_block(client, MICROP_I2C_WCMD_READ_ADC_VALUE_REQ, cmd, 2);
-	if (ret < 0) {
-		dev_err(&client->dev, "%s: request adc fail\n", __func__);
-		return -EIO;
-	}
-
-	ret = i2c_read_block(client, MICROP_I2C_RCMD_ADC_VALUE, data, 2);
-	if (ret < 0) {
-		dev_err(&client->dev, "%s: read adc fail\n", __func__);
-		return -EIO;
-	}
-	*value = data[0] << 8 | data[1];
-	return 0;
 }
 
 /**

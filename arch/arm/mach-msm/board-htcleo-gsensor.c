@@ -110,9 +110,6 @@ static int spi_gsensor_init_hw(void)
 	if (spi_gsensor_read(buffer) < 0)
 		return -EIO;
 
-	/*printk("spi_gsensor_init_hw,read RANGE_BWIDTH_REG = %x "
-	, buffer[1]);*/
-
 	buffer[1] = (buffer[1]&0xe0);
 	buffer[0] = RANGE_BWIDTH_REG;
 	if (spi_gsensor_write(buffer) < 0)
@@ -130,32 +127,6 @@ static int spi_gsensor_init_hw(void)
 	return 0;
 }
 
-/*
-static int spi_gsensor_read_version(void)
-{
-	uint8_t buffer[2];
-	int ret = -EIO;
-
-	buffer[0] = VERSION_REG;
-	buffer[1] = 1;
-	ret = spi_gsensor_read(buffer);
-	if (ret < 0) {
-		printk(KERN_ERR "%s: get al_version fail(%d)\n", __func__, ret);
-		return ret;
-	}
-	printk(KERN_INFO "%s: al_version: 0x%2.2X\n", __func__, buffer[0]);
-
-	buffer[0] = CHIP_ID_REG;
-	buffer[1] = 1;
-	ret = spi_gsensor_read(buffer);
-	if (ret < 0) {
-		printk(KERN_ERR "%s: get chip_id fail(%d)\n", __func__, ret);
-		return ret;
-	}
-	printk(KERN_INFO "%s: chip_id: 0x%2.2X\n", __func__, buffer[0]);
-	return 0;
-}
-*/
 static int spi_bma150_TransRBuff(short *rbuf)
 {
 	int ret;
@@ -515,7 +486,6 @@ static ssize_t spi_bma150_force_store(struct device *dev,
 				     struct device_attribute *attr,
 				     const char *buf, size_t count)
 {
-	char *s = buf;
 	int ret = 0;
 
 	if (count == (strlen("enable") + 1) &&
@@ -650,7 +620,6 @@ static ssize_t debug_flag_store(struct device *dev,
 	sscanf(buf, "%d", &debug_flag);
 
 	return count;
-
 }
 
 static DEVICE_ACCESSORY_ATTR(debug_en, 0664, \
@@ -727,25 +696,7 @@ err_create_class:
 
 static int spi_gsensor_initial(void)
 {
-	int ret;
-/*	ret = spi_microp_enable(1);
-	if (ret < 0) {
-		printk(KERN_ERR "%s: spi_microp_enable fail\n", __func__);
-		return ret;
-	}*/
-/*	ret = spi_gsensor_read_version();
-	if (ret < 0) {
-		printk(KERN_ERR "%s: get version fail\n", __func__);
-		return ret;
-	}*/
-
-/*	ret = microp_gsensor_init_hw(client);
-	if (ret < 0) {
-		printk(KERN_ERR "%s: init g-sensor fail\n", __func__);
-		return ret;
-	}
-*/
-	ret = misc_register(&spi_bma_device);
+	int ret = misc_register(&spi_bma_device);
 	if (ret < 0) {
 		E("%s: init misc_register fail\n", __func__);
 		return ret;
@@ -794,8 +745,6 @@ err_spi_enable:
 
 static int  spi_bma150_probe(struct platform_device *pdev)
 {
-  
-	//unsigned int gs_kvalue=0;
 	printk(KERN_INFO "%s: G-sensor connect with microP: "
 			"start initial, kvalue = 0x%x\n", __func__, gs_kvalue);
 
@@ -848,7 +797,6 @@ static void __exit spi_bma150_exit(void)
 	platform_driver_unregister(&spi_bma150_driver);
 }
 
-//late_initcall(spi_bma150_init);
 module_init(spi_bma150_init);
 module_exit(spi_bma150_exit);
 

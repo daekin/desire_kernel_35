@@ -89,20 +89,6 @@ EXPORT_SYMBOL(enable_aux_loopback);
 
 int set_aux_gain(int level)
 {
-   /* struct aux_gain_req {
-        struct rpc_request_hdr hdr;
-        int level;
-    } aux_req;
-
-    D("%s called %d\n", __func__, level);
-
-    if (is_rpc_connect() == -1)
-        return -1;
-
-    aux_req.level = cpu_to_be32(level);
-    return  msm_rpc_call(endpoint,
-        ONCRPC_SET_AUX_PGA_GAIN_PROC,
-        &aux_req, sizeof(aux_req), 5 * HZ);*/
     return 0;
 }
 EXPORT_SYMBOL(set_aux_gain);
@@ -195,8 +181,6 @@ static long acoustic_ioctl(struct file *file, unsigned int cmd,
 	switch (cmd) {
 	case ACOUSTIC_UPDATE_ADIE: 
 	{
-		unsigned data = 0xE5;
-
 		D("ioctl: ACOUSTIC_UPDATE_ADIE called %d.\n", current->pid);
 
 // CotullaTODO: finish this code. if we need android tables really...

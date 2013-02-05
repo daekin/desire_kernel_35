@@ -365,7 +365,6 @@ int dal_call_raw(struct dal_client *client,
 		dal_trace_dump(client);
 		pr_err("dal: call timed out. dsp is probably dead.\n");
 		dal_trace_print(hdr, data, data_len, 0);
-//		BUG();
 	}
 
 	return client->status;
@@ -395,13 +394,13 @@ int dal_call(struct dal_client *client,
 	mutex_lock(&client->write_lock);
 	r = dal_call_raw(client, &hdr, data, data_len, reply, reply_max);
 	mutex_unlock(&client->write_lock);
-#if 1
+
 	if ((r > 3) && (((uint32_t*) reply)[0] == 0)) {
 	 //   pr_info("dal call OK\n");
 	} else {
 		pr_info("dal call %d %d ERROR\n", ddi, prototype);
 	}
-#endif
+
 	return r;
 }
 
@@ -603,7 +602,6 @@ int dal_call_f1(struct dal_client *client, uint32_t ddi, uint32_t arg1, uint32_t
 
 int dal_call_f5(struct dal_client *client, uint32_t ddi, void *ibuf, uint32_t ilen)
 {
-//	uint32_t tmp[128];
 	uint32_t tmp[DAL_DATA_MAX];
 	int res;
 	int param_idx = 0;

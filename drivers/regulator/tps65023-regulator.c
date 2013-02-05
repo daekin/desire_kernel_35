@@ -560,7 +560,6 @@ int tps_65023_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	struct regulator_dev *rdev;
 	struct tps_pmic *tps;
 	int i;
-	int error;
 
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
 		return -EIO;

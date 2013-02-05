@@ -68,7 +68,6 @@ this file use q6audio_* function primary, some new was added
 
 
 static int qsd_audio_volume_update(struct qsd_audio *prtd);
-static int qsd_pcm_mmap(struct snd_pcm_substream *substream, struct vm_area_struct *vma);
 
 
 //-----------------------------------------------------------------------------------
@@ -472,8 +471,6 @@ static snd_pcm_uframes_t qsd_pcm_pointer(struct snd_pcm_substream *substream)
     struct qsd_audio *prtd = runtime->private_data;
     unsigned int res;
 
-//    DBG("");
-
     res = prtd->buf_curoff;
     if (res >= prtd->buf_maxoff) DBG("fatal overflow: %d > %d", prtd->buf_curoff, prtd->buf_maxoff);
 
@@ -622,7 +619,7 @@ int qsd_pcm_hw_params(struct snd_pcm_substream *substream, struct snd_pcm_hw_par
     struct qsd_audio *prtd = runtime->private_data;
     unsigned long totbytes = params_buffer_bytes(params);
 
-    DBG("+: totbytes=%d", totbytes);
+    DBG("+: totbytes=%ld", totbytes);
 
     snd_pcm_lib_malloc_pages(substream, totbytes);
 
@@ -710,19 +707,6 @@ struct snd_pcm_ops qsd_pcm_ops =
     .pointer = qsd_pcm_pointer,
 };
 EXPORT_SYMBOL_GPL(qsd_pcm_ops);
-
-
-
-/*
-static int qsd_pcm_remove(struct platform_device *devptr)
-{
-    struct snd_soc_device *socdev = platform_get_drvdata(devptr);
-
-    DBG("");
-    platform_set_drvdata(devptr, NULL);
-    return 0;
-}
-*/
 
 
 //==================================================================================

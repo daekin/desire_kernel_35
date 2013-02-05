@@ -2582,131 +2582,13 @@ static int reg_debug_init(void)
 	return 0;
 }
 
-/**
- * regulator_debug_create_directory - Creates debugfs directories and files
- *					for each regulator
- *
- * @param regulator_dev Voltage/Current regulator class device.
- *
- * Description: This function is run everytime "regulator_register" is run.
- *		It is called for every regulator and initilaizes both the
- *		regulator directory and the data files inside (ex. enable,
- *		get/set voltage etc).
- */
-static int regulator_debug_create_directory(struct regulator_dev *regulator_dev)
-{
-	struct dentry *reg_subdir;
-	struct dentry *err_ptr;
-	struct regulator *reg;
-	struct regulator_ops *reg_ops;
-	mode_t mode;
-	if (IS_ERR(regulator_dev) || regulator_dev == NULL ||
-		IS_ERR(debugfs_base) || debugfs_base == NULL) {
-		pr_err("Error-Bad Function Input\n");
-		goto error;
-	}
-
-	reg_subdir = debugfs_create_dir(regulator_dev->desc->name,
-					debugfs_base);
-
-	reg = regulator_get(NULL, regulator_dev->desc->name);
-	if (IS_ERR(reg) || reg == NULL) {
-		pr_err("Error-Bad Function Input\n");
-		goto error;
-	}
-
-	reg_ops = regulator_dev->desc->ops;
-	mode = 0;
-	/* Enabled File */
-	if (reg_ops->is_enabled)
-		mode |= S_IRUGO;
-	if (reg_ops->enable || reg_ops->disable)
-		mode |= S_IWUSR;
-	if (mode)
-		err_ptr = debugfs_create_file("enable", mode, reg_subdir,
-						reg, &reg_enable_fops);
-	if (IS_ERR(err_ptr)) {
-		pr_err("Error-Could not create enable file\n");
-		debugfs_remove_recursive(reg_subdir);
-		goto error;
-	}
-
-	mode = 0;
-	/* Force-Disable File */
-	if (reg_ops->is_enabled)
-		mode |= S_IRUGO;
-	if (reg_ops->enable || reg_ops->disable)
-		mode |= S_IWUSR;
-	if (mode)
-		err_ptr = debugfs_create_file("force_disable", mode,
-					reg_subdir, reg, &reg_fdisable_fops);
-	if (IS_ERR(err_ptr)) {
-		pr_err("Error-Could not create force_disable file\n");
-		debugfs_remove_recursive(reg_subdir);
-		goto error;
-	}
-
-	mode = 0;
-	/* Voltage File */
-	if (reg_ops->get_voltage)
-		mode |= S_IRUGO;
-	if (reg_ops->set_voltage)
-		mode |= S_IWUSR;
-	if (mode)
-		err_ptr = debugfs_create_file("voltage", mode, reg_subdir,
-						reg, &reg_volt_fops);
-	if (IS_ERR(err_ptr)) {
-		pr_err("Error-Could not create voltage file\n");
-		debugfs_remove_recursive(reg_subdir);
-		goto error;
-	}
-
-	mode = 0;
-	/* Mode File */
-	if (reg_ops->get_mode)
-		mode |= S_IRUGO;
-	if (reg_ops->set_mode)
-		mode |= S_IWUSR;
-	if (mode)
-		err_ptr = debugfs_create_file("mode", mode, reg_subdir,
-						reg, &reg_mode_fops);
-	if (IS_ERR(err_ptr)) {
-		pr_err("Error-Could not create mode file\n");
-		debugfs_remove_recursive(reg_subdir);
-		goto error;
-	}
-
-	mode = 0;
-	/* Optimum Mode File */
-	if (reg_ops->get_mode)
-		mode |= S_IRUGO;
-	if (reg_ops->set_mode)
-		mode |= S_IWUSR;
-	if (mode)
-		err_ptr = debugfs_create_file("optimum_mode", mode,
-				reg_subdir, reg, &reg_optimum_mode_fops);
-	if (IS_ERR(err_ptr)) {
-		pr_err("Error-Could not create optimum_mode file\n");
-		debugfs_remove_recursive(reg_subdir);
-		goto error;
-	}
-
-	return 0;
-
-error:
-	return -ENOMEM;
-}
 #else
-static inline void regulator_debug_create_directory(struct regulator_dev
-						*regulator_dev)
-{
-	return;
-}
 
 static inline void reg_debug_init(void)
 {
 	return;
 }
+
 #endif
 
 /**
@@ -2835,7 +2717,6 @@ struct regulator_dev *regulator_register(struct regulator_desc *regulator_desc,
 	list_add(&rdev->list, &regulator_list);
 out:
 	mutex_unlock(&regulator_list_mutex);
-	//regulator_debug_create_directory(rdev); // get rid of this
 	return rdev;
 
 unset_supplies:
