@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.35.14
-# Mon Mar 25 00:30:48 2013
+# Mon Mar 25 22:40:31 2013
 #
 CONFIG_ARM=y
 CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -518,6 +518,7 @@ CONFIG_ZBOOT_ROM_BSS=0x0
 CONFIG_CMDLINE=""
 # CONFIG_XIP_KERNEL is not set
 CONFIG_KEXEC=y
+CONFIG_ATAGS_PROC=y
 
 #
 # CPU Power Management
