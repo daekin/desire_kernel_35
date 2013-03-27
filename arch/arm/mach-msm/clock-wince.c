@@ -533,7 +533,7 @@ static int new_clk_set_rate(uint32_t id, unsigned long rate)
         else if (rate ==  3000000) speed = 1;
         else 
         {
-            printk("wrong MDC clock %d\n", rate);
+            printk("wrong MDC clock %lu\n", rate);
             return 0;
         }
         clk = 40;
@@ -547,7 +547,7 @@ static int new_clk_set_rate(uint32_t id, unsigned long rate)
         else if (rate == 96000000) speed = 5;
         else 
         {
-            printk("wrong clock %d\n", rate);
+            printk("wrong clock %lu\n", rate);
             return 0;
         }
         clk = 41;
