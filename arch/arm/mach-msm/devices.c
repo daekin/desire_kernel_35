@@ -1359,7 +1359,7 @@ struct platform_device msm_device_ssbi_pmic = {
 #endif
 
 
-#define CLOCK(clk_name, clk_id, clk_dev, clk_flags, clk_arch) {	\
+#define CLK(clk_name, clk_id, clk_dev, clk_flags, clk_arch) {	\
 	.name = clk_name, \
 	.id = clk_id, \
 	.flags = (clk_flags) | ((clk_arch) & CLKFLAG_ARCH_ALL), \
@@ -1367,11 +1367,11 @@ struct platform_device msm_device_ssbi_pmic = {
 	}
 
 #define CLK_ALL(name, id, dev, flags) \
-		CLOCK(name, id, dev, flags, CLKFLAG_ARCH_ALL)
+		CLK(name, id, dev, flags, CLKFLAG_ARCH_ALL)
 #define CLK_7X00A(name, id, dev, flags) \
-		CLOCK(name, id, dev, flags, CLKFLAG_ARCH_MSM7X00A)
+		CLK(name, id, dev, flags, CLKFLAG_ARCH_MSM7X00A)
 #define CLK_8X50(name, id, dev, flags) \
-		CLOCK(name, id, dev, flags, CLKFLAG_ARCH_QSD8X50)
+		CLK(name, id, dev, flags, CLKFLAG_ARCH_QSD8X50)
 
 #define OFF CLKFLAG_AUTO_OFF
 #define MINMAX (CLKFLAG_USE_MIN_TO_SET | CLKFLAG_USE_MAX_TO_SET)
@@ -1434,7 +1434,7 @@ struct clk msm_clocks[] = {
 	CLK_8X50("lcdc_pad_pclk_clk", LCDC_PAD_PCLK, &msm_device_mdp.dev, 0),
 	CLK_8X50("mdp_vsync_clk", MDP_VSYNC_CLK, &msm_device_mdp.dev, 0),
 
-	CLOCK(NULL, 0, NULL, 0, 0),
+	CLK(NULL, 0, NULL, 0, 0),
 #else /* 7x30 clock tbl */
 	CLK_PCOM("adm_clk", ADM_CLK, NULL, DEFER),
 	CLK_PCOM("adsp_clk", ADSP_CLK, NULL, 0),
@@ -1526,6 +1526,6 @@ struct clk msm_clocks[] = {
 	CLK_PCOM("csi_pclk", CSI0_P_CLK, NULL, 0),
 	CLK_PCOM("csi_vfe_clk", CSI0_VFE_CLK, NULL, 0),
 
-	CLOCK(NULL, 0, NULL, 0, 0),
+	CLK(NULL, 0, NULL, 0, 0),
 #endif
 };

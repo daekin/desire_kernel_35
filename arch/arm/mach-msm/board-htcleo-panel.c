@@ -1242,28 +1242,28 @@ static uint8_t SHARP_DEINIT[12] =
 //////////////////////////////////////////////////////////////////////////
 
 
-#define SPI_CLK 17
-#define SPI_DO  18
-#define SPI_DI  19
-#define SPI_CS  20
+#define SPI_PANEL_CLK 17
+#define SPI_PANEL_DO  18
+#define SPI_PANEL_DI  19
+#define SPI_PANEL_CS  20
 
 #define LCM_GPIO_CFG(gpio, func) \
     PCOM_GPIO_CFG(gpio, func, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_16MA)
 
 static uint32_t spi_on_gpio_table[] =
 {
-	LCM_GPIO_CFG(SPI_CLK, 1),
-	LCM_GPIO_CFG(SPI_CS, 1),
-	LCM_GPIO_CFG(SPI_DO, 1),
-	PCOM_GPIO_CFG(SPI_DI, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_16MA),
+	LCM_GPIO_CFG(SPI_PANEL_CLK, 1),
+	LCM_GPIO_CFG(SPI_PANEL_CS, 1),
+	LCM_GPIO_CFG(SPI_PANEL_DO, 1),
+	PCOM_GPIO_CFG(SPI_PANEL_DI, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_16MA),
 };
 
 static uint32_t spi_off_gpio_table[] =
 {
-	LCM_GPIO_CFG(SPI_CLK, 0),
-	LCM_GPIO_CFG(SPI_CS, 0),
-	LCM_GPIO_CFG(SPI_DO, 0),
-	PCOM_GPIO_CFG(SPI_DI, 0, GPIO_INPUT, GPIO_NO_PULL, GPIO_16MA),
+	LCM_GPIO_CFG(SPI_PANEL_CLK, 0),
+	LCM_GPIO_CFG(SPI_PANEL_CS, 0),
+	LCM_GPIO_CFG(SPI_PANEL_DO, 0),
+	PCOM_GPIO_CFG(SPI_PANEL_DI, 0, GPIO_INPUT, GPIO_NO_PULL, GPIO_16MA),
 };
 
 static int spi_gpio_switch(int on)

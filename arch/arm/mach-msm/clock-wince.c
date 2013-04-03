@@ -1067,13 +1067,13 @@ long pc_clk_round_rate(unsigned id, unsigned rate)
 	return rate;
 }
 
-static int pc_pll_request(unsigned id, unsigned on)
-{
-	if(debug_mask&DEBUG_UNKNOWN_CMD)
-		printk(KERN_WARNING "%s not implemented for PLL=%u\n", __func__, id);
-
-	return 0;
-}
+//static int pc_pll_request(unsigned id, unsigned on)
+//{
+//	if(debug_mask&DEBUG_UNKNOWN_CMD)
+//		printk(KERN_WARNING "%s not implemented for PLL=%u\n", __func__, id);
+//
+//	return 0;
+//}
 
 /*
  * Standard clock functions defined in include/linux/clk.h
@@ -1263,7 +1263,7 @@ EXPORT_SYMBOL(clks_print_running);
 int clks_allow_tcxo_locked(void)
 {
 	struct clk *clk;
-	struct hlist_node *pos;
+//	struct hlist_node *pos;
 	unsigned long flags;
 
 	spin_lock_irqsave(&clocks_lock, flags);
