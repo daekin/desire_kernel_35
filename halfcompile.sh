@@ -1,6 +1,6 @@
-git log > ./currentrelease.txt
+git log > ../changelog.txt
 ./compiledcopy
 
-tar cvzf ../"ACAOmegaHTC35KernelSENSE`date +"%m%d%y%H%M"`".tar.gz ../compiled/
-mv ../ACAOmegaHTC35Kernel* ../ACAKernels
+tar cvzf ../"desire_kernel_35-`date +"%y%m%d%H%M"`".tar.gz ../compiled/ ../changelog.txt
+mv ../desire_kernel_35-* ../archive/
 
