@@ -473,7 +473,7 @@ static int bma150_resume(struct device *device)
 /* get the gsensor force mode */
 static ssize_t spi_bma150_force_show(struct device *dev,
 				      struct device_attribute *attr,
-				      char *buf)
+				      const char *buf)
 {
 	char *s = buf;
 	s += sprintf(s, "%d\n", atomic_read(&Bma150ForceMode_flag));

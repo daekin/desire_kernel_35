@@ -533,7 +533,7 @@ static int new_clk_set_rate(uint32_t id, unsigned long rate)
         else if (rate ==  3000000) speed = 1;
         else 
         {
-            printk("wrong MDC clock %lu\n", rate);
+            printk("wrong MDC clock %d\n", rate);
             return 0;
         }
         clk = 40;
@@ -547,7 +547,7 @@ static int new_clk_set_rate(uint32_t id, unsigned long rate)
         else if (rate == 96000000) speed = 5;
         else 
         {
-            printk("wrong clock %lu\n", rate);
+            printk("wrong clock %d\n", rate);
             return 0;
         }
         clk = 41;
@@ -953,7 +953,7 @@ static void pc_clk_disable(uint32_t id)
 	}
 }
 
-static int pc_clk_set_rate(unsigned id, unsigned rate)
+static int pc_clk_set_rate(uint32_t id, unsigned long rate)
 {
 	int retval, r;
 
@@ -963,36 +963,36 @@ static int pc_clk_set_rate(unsigned id, unsigned rate)
 	if (r != -1) return r;
 
 	if(DEBUG_MDNS)
-		D("%s: id=%u rate=%u\n", __func__, id, rate);
+		D("%s: id=%u rate=%lu\n", __func__, id, rate);
 
 	retval = set_mdns_host_clock(id, rate);
 
 	return retval;
 }
 
-static int pc_clk_set_min_rate(unsigned id, unsigned rate)
+static int pc_clk_set_min_rate(uint32_t id, unsigned long rate)
 {
 	if (id < NR_CLKS)
 	 min_clk_rate[id]=rate;
 	else if(debug_mask&DEBUG_UNKNOWN_ID)
-	 printk(KERN_WARNING " FIXME! clk_set_min_rate not implemented; %u:%u NR_CLKS=%d\n", id, rate, NR_CLKS);
+	 printk(KERN_WARNING " FIXME! clk_set_min_rate not implemented; %u:%lu NR_CLKS=%d\n", id, rate, NR_CLKS);
 
 	return 0;
 }
 
-static int pc_clk_set_max_rate(unsigned id, unsigned rate)
+static int pc_clk_set_max_rate(uint32_t id, unsigned long rate)
 {
 	if (id < NR_CLKS)
 	 max_clk_rate[id]=rate;
 	else if(debug_mask&DEBUG_UNKNOWN_ID)
-	 printk(KERN_WARNING " FIXME! clk_set_min_rate not implemented; %u:%u NR_CLKS=%d\n", id, rate, NR_CLKS);
+	 printk(KERN_WARNING " FIXME! clk_set_min_rate not implemented; %u:%lu NR_CLKS=%d\n", id, rate, NR_CLKS);
 
 	return 0;
 }
 
-static unsigned pc_clk_get_rate(unsigned id)
+static unsigned long pc_clk_get_rate(uint32_t id)
 {
-	unsigned rate = 0;
+	unsigned long rate = 0;
 
 	rate = new_clk_get_rate(id);
 
@@ -1031,7 +1031,7 @@ static unsigned pc_clk_get_rate(unsigned id)
 	return rate;
 }
 
-static int pc_clk_set_flags(unsigned id, unsigned flags)
+static int pc_clk_set_flags(uint32_t id, unsigned long flags)
 {
 	int r;
 
@@ -1039,11 +1039,11 @@ static int pc_clk_set_flags(unsigned id, unsigned flags)
 	if (r != -1) return r;
 
 	if(debug_mask&DEBUG_UNKNOWN_CMD)
-		printk(KERN_WARNING "%s not implemented for clock: id=%u, flags=%u\n", __func__, id, flags);
+		printk(KERN_WARNING "%s not implemented for clock: id=%u, flags=%lu\n", __func__, id, flags);
 	return 0;
 }
 
-static unsigned pc_clk_is_enabled(unsigned id)
+static int pc_clk_is_enabled(uint32_t id)
 {
 	int is_enabled = 0;
 	unsigned bit;
@@ -1067,13 +1067,13 @@ long pc_clk_round_rate(unsigned id, unsigned rate)
 	return rate;
 }
 
-//static int pc_pll_request(unsigned id, unsigned on)
-//{
-//	if(debug_mask&DEBUG_UNKNOWN_CMD)
-//		printk(KERN_WARNING "%s not implemented for PLL=%u\n", __func__, id);
-//
-//	return 0;
-//}
+static int pc_pll_request(unsigned id, unsigned on)
+{
+	if(debug_mask&DEBUG_UNKNOWN_CMD)
+		printk(KERN_WARNING "%s not implemented for PLL=%u\n", __func__, id);
+
+	return 0;
+}
 
 /*
  * Standard clock functions defined in include/linux/clk.h
@@ -1263,7 +1263,7 @@ EXPORT_SYMBOL(clks_print_running);
 int clks_allow_tcxo_locked(void)
 {
 	struct clk *clk;
-//	struct hlist_node *pos;
+	struct hlist_node *pos;
 	unsigned long flags;
 
 	spin_lock_irqsave(&clocks_lock, flags);

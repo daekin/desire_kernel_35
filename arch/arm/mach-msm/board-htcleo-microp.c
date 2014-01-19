@@ -527,7 +527,7 @@ static void register_microp_devices(struct platform_device *devices, int num)
 static int microp_i2c_probe(struct i2c_client *client,
 			    const struct i2c_device_id *id)
 {
-	struct microp_i2c_platform_data *pdata = NULL;
+	struct microp_i2c_platform_data *pdata;
 	struct microp_i2c_client_data *cdata;
 	uint8_t data[6];
 	int ret;

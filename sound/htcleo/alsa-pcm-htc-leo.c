@@ -354,7 +354,7 @@ static int qsd_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
     struct snd_pcm_runtime *runtime = substream->runtime;
     struct qsd_audio *prtd = runtime->private_data;
 
-    DBG("%d %p %p", cmd, prtd, prtd->ac);
+    DBG("%d %X %X", cmd, prtd, prtd->ac);
     switch (cmd) 
     {
     case SNDRV_PCM_TRIGGER_START:
@@ -416,7 +416,7 @@ static int qsd_pcm_open(struct snd_pcm_substream *substream)
         rc = -ENOMEM;
         goto fail;
     }
-    DBG(" prtd = %p", prtd);
+    DBG(" prtd = %X", prtd);
 
     spin_lock_init(&prtd->lock);
     init_waitqueue_head(&prtd->fake_wait);
